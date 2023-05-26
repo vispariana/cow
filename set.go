@@ -1,5 +1,10 @@
 package cow
 
+import (
+	"fmt"
+	"strings"
+)
+
 type Set[K comparable] map[K]bool
 
 func NewSet[K comparable](in ...K) Set[K] {
@@ -48,4 +53,20 @@ func (s Set[K]) ToSlice() (out Slice[K]) {
 		out = append(out, k)
 	}
 	return out
+}
+
+func (x Set[K]) String() string {
+	b := strings.Builder{}
+	b.WriteString("Set{")
+	first := true
+	for k := range x {
+		if !first {
+			b.WriteString(", ")
+		} else {
+			first = false
+		}
+		b.WriteString(fmt.Sprintf("%+v", k))
+	}
+	b.WriteRune('}')
+	return b.String()
 }
