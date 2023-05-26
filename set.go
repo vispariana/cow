@@ -70,3 +70,40 @@ func (x Set[K]) String() string {
 	b.WriteRune('}')
 	return b.String()
 }
+
+func (x Set[T]) All(f func(T) bool) bool {
+	for i := range x {
+		if !f(i) {
+			return false
+		}
+	}
+	return true
+}
+
+func (x Set[T]) Any(f func(T) bool) bool {
+	for i := range x {
+		if f(i) {
+			return true
+		}
+	}
+	return false
+}
+
+func (x Set[T]) Filter(f func(T) bool) Set[T] {
+	out := Set[T]{}
+	for i := range x {
+		if f(i) {
+			out.Insert(i)
+		}
+	}
+	return out
+}
+
+func (x Set[T]) CountWhere(f func(T) bool) (out int) {
+	for i := range x {
+		if f(i) {
+			out++
+		}
+	}
+	return
+}
