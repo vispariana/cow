@@ -1,4 +1,4 @@
-module github.com/vispariana/slice
+module github.com/vispariana/cow
 
 go 1.20
 

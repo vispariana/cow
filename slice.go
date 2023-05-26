@@ -1,4 +1,4 @@
-package slice
+package cow
 
 import (
 	"golang.org/x/exp/slices"
@@ -6,18 +6,18 @@ import (
 
 type Slice[T comparable] []T
 
-func New[T comparable](in ...T) Slice[T] {
+func NewSlice[T comparable](in ...T) Slice[T] {
 	return in
-}
-
-func (x Slice[T]) Any(f func(T) bool) bool {
-	return slices.ContainsFunc(x, f)
 }
 
 func (x Slice[T]) All(f func(T) bool) bool {
 	return !slices.ContainsFunc(x, func(t T) bool {
 		return !f(t)
 	})
+}
+
+func (x Slice[T]) Any(f func(T) bool) bool {
+	return slices.ContainsFunc(x, f)
 }
 
 func (x Slice[T]) Contains(t T) bool {
@@ -57,4 +57,17 @@ func (x Slice[T]) UniqueFunc(cmp func(x, y T) bool) Slice[T] {
 	dst := make(Slice[T], len(x))
 	copy(dst, x)
 	return slices.CompactFunc(dst, cmp)
+}
+
+func (x Slice[T]) ToSet() Set[T] {
+	return NewSet(x...)
+}
+
+func (x Slice[T]) CountWhere(f func(T) bool) (out int) {
+	for i := range x {
+		if f(x[i]) {
+			out++
+		}
+	}
+	return
 }
