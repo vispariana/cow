@@ -1,12 +1,10 @@
 package cow
 
-import (
-	"golang.org/x/exp/slices"
-)
+import "slices"
 
-type Slice[T comparable] []T
+type Slice[T any] []T
 
-func NewSlice[T comparable](in ...T) Slice[T] {
+func NewSlice[T any](in ...T) Slice[T] {
 	return in
 }
 
@@ -20,9 +18,9 @@ func (x Slice[T]) Any(f func(T) bool) bool {
 	return slices.ContainsFunc(x, f)
 }
 
-func (x Slice[T]) Contains(t T) bool {
-	return slices.Contains(x, t)
-}
+// func (x Slice[T]) Contains(t T) bool {
+// 	return slices.Contains(x, t)
+// }
 
 func (x Slice[T]) Filter(f func(T) bool) (res Slice[T]) {
 	for i := range x {
@@ -40,27 +38,23 @@ func (x Slice[T]) Reduce(init T, f func(init T, new T) T) T {
 	return init
 }
 
-func (x Slice[T]) SortFunc(cmp func(x, y T) bool) Slice[T] {
+func (x Slice[T]) SortFunc(cmp func(x, y T) int) Slice[T] {
 	dst := make(Slice[T], len(x))
 	copy(dst, x)
 	slices.SortFunc(dst, cmp)
 	return dst
 }
 
-func (x Slice[T]) Unique() Slice[T] {
-	dst := make(Slice[T], len(x))
-	copy(dst, x)
-	return slices.Compact(dst)
-}
+// func (x Slice[T]) Unique() Slice[T] {
+// 	dst := make(Slice[T], len(x))
+// 	copy(dst, x)
+// 	return slices.Compact(dst)
+// }
 
 func (x Slice[T]) UniqueFunc(cmp func(x, y T) bool) Slice[T] {
 	dst := make(Slice[T], len(x))
 	copy(dst, x)
 	return slices.CompactFunc(dst, cmp)
-}
-
-func (x Slice[T]) ToSet() Set[T] {
-	return NewSet(x...)
 }
 
 func (x Slice[T]) CountWhere(f func(T) bool) (out int) {
